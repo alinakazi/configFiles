@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd"
+   metadata-complete="true"
+   version="2.5">
+
+  <display-name>SHMA</display-name>
+
+   <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <listener>
+    <listener-class>flex.messaging.HttpFlexSession</listener-class>
+  </listener>
+
+  <servlet>
+    <display-name>MessageBrokerServlet</display-name>
+    <servlet-name>MessageBrokerServlet</servlet-name>
+    <servlet-class>flex.messaging.MessageBrokerServlet</servlet-class>
+    <init-param>
+      <param-name>services.configuration.file</param-name>
+      <param-value>/WEB-INF/conf/services-config.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>MessageBrokerServlet</servlet-name>
+    <url-pattern>/messagebroker/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <display-name>RDSDispatchServlet</display-name>
+    <servlet-name>RDSDispatchServlet</servlet-name>
+    <servlet-class>flex.rds.server.servlet.FrontEndServlet</servlet-class>
+    <init-param>
+      <param-name>useAppserverSecurity</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RDSDispatchServlet</servlet-name>
+    <url-pattern>/CFIDE/main/ide.cfm</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Jersey</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Jersey</servlet-name>
+    <url-pattern>/SHMA/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SHMA</servlet-name>
+    <servlet-class>com.shm.servlets.shmServlet</servlet-class>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SHMA</servlet-name>
+    <url-pattern>/SHMA</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>HTTPTunnel</servlet-name>
+    <servlet-class>com.shm.servlets.shmHTTPTunnel</servlet-class>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>HTTPTunnel</servlet-name>
+    <url-pattern>/HTTPTunnel</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>ResponseHeaderFilter</filter-name>
+    <filter-class>com.shm.servlets.shmResponseFilterServlet</filter-class>
+    <init-param>
+      <param-name>Cache-Control</param-name>
+      <param-value>max-age=0</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ResponseHeaderFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+</web-app>
